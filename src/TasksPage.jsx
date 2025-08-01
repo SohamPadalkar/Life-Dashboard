@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 function TasksPage() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    const saved = localStorage.getItem("lifeDashboard_tasks");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [newTask, setNewTask] = useState("");
   const [newDue, setNewDue] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("lifeDashboard_tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const handleAddTask = () => {
     if (!newTask.trim()) return;
@@ -21,6 +28,23 @@ function TasksPage() {
         i === idx ? { ...t, completed: !t.completed } : t
       )
     );
+  };
+
+  const handleResetTasks = () => {
+    if (window.confirm("Clear all tasks? This cannot be undone!")) {
+      setTasks([]);
+      localStorage.removeItem("lifeDashboard_tasks");
+    }
+  };
+
+  const buttonBaseStyle = {
+    padding: "8px 16px",
+    border: "none",
+    borderRadius: 8,
+    fontWeight: 600,
+    fontSize: 15,
+    cursor: "pointer",
+    transition: "background 0.18s",
   };
 
   return (
@@ -80,10 +104,33 @@ function TasksPage() {
               borderRadius: 8,
               cursor: "pointer",
               fontWeight: 600,
+              transition: "background 0.18s",
             }}
+            onMouseOver={e => e.currentTarget.style.background = "#2450a8ff"}
+            onMouseOut={e => e.currentTarget.style.background = "#3c79f5"}
           >
             Add
           </button>
+          <button 
+            onClick={handleResetTasks}
+            style={{
+              background: "#ff3b3b",
+              color: "#fff",
+              border: "none",
+              borderRadius: 8,
+              padding: "8px 16px",
+              fontWeight: 600,
+              curson: "pointer",
+              marginBottom: 14,
+              marginLeft: "auto",
+              display: "block",
+              transition: "background 0.18s",
+            }}
+            onMouseOver={e => e.currentTarget.style.background = "#d82121"}
+            onMouseOut={e => e.currentTarget.style.background = "#ff3b3b"}
+            >
+              Rest All Tasks
+            </button>
         </div>
         <ul style={{ listStyle: "none", padding: 0 }}>
           {tasks.length === 0 && (
