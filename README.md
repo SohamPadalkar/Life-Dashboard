@@ -73,3 +73,6 @@ Built with ✨ love, React, and a little hackathon adrenaline
 Mood/Finance charts: Recharts
 
 Original idea and code: Soham Padalkar
+Live Demo
+
+Check it out here: https://life-dashboard-rouge.vercel.app/
